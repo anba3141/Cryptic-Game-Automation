@@ -72,38 +72,19 @@ class Command:
         self.sent = self.response.pop(0)
 
 
-def enter_command(cmd: str):
-    timer(3, 7)
-    command_line = driver.find_element_by_xpath('//*[@id="cmdline"]')
-    command_line.send_keys(cmd)
-    timer(1, 2)
-
-
-def submit_command():
-    timer(1, 2)
-    command_line = driver.find_element_by_xpath('//*[@id="cmdline"]')
-    command_line.send_keys("\n")
-    timer(1, 2)
-
-
 def close_terminal():
     timer(1, 2)
     while True:
         try:
-            enter_command("exit")
-            submit_command()
+            Command("exit").send()
         except:
             break
     timer(1, 2)
 
 
-def select_uuid():
-    timer(1, 2)
-    driver.find_element_by_xpath('//*[@id="terminal-history"]/ul/li[1]/span').click()
-    timer(1, 2)
+def get_uuid(cmd :Command):  # cmd has to be send as spot before
+    return cmd.response[1].split(" ")[1]
 
 
-def select_ssh():
-    timer(1, 2)
-    driver.find_element_by_xpath('//*[@id="terminal-history"]/ul/ul/li/span').click()
-    timer(1, 2)
+def get_ssh(cmd :Command):  # cmd has to be send as spot before
+    return cmd.response[3].split(" ")[1][1:-1]
