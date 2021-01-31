@@ -118,29 +118,44 @@ class _Terminal:
                 break
         timer(1, 2)
 
-    def Command(self, command: str):
-        return self._Command(command, self.driver)
+    def Command(self, command: str, direct_send=True):
+        return self._Command(command, self.driver, direct_send)
 
     class _Command:
-        def __init__(self, command: str, driver):
-            self.command = command
+        def __init__(self, command: str, driver, direct_send=True):
             self.is_send = False
+            self.driver = driver
+            self.direct_send = direct_send
             self.response = None
             self.sent = None
-            self.driver = driver
+            self.command = command
+
+        @property
+        def command(self):
+            return self._command
+
+        @command.setter
+        def command(self, value: str):
+            self._command = value
+            if self.direct_send:
+                self.send()
 
         def send(self):
             timer(4, 6)
             command_line = self.driver.find_element_by_xpath('//*[@id="cmdline"]')
             command_line.send_keys(self.command + "\n")
             self.is_send = True
-            timer(0.5, 1)
+            timer(2, 3)
             self.response = self.driver.find_element_by_xpath('//*[@id="terminal-history"]').text.split(
                 self.driver.find_elements_by_xpath('//*[@id="prompt"]')[-1].text)[-1].split("\n")
             self.sent = self.response.pop(0)
 
-        def get_uuid(self):  # cmd has to be send as spot before
-            return self.response[1].split(" ")[1]
+        def get_device_uuid(self):  # cmd has to be send as spot before
+            if self.is_send and self.command == "spot":
+                return self.response[1].split(" ")[1]
+            return None
 
-        def get_ssh(self):  # cmd has to be send as spot before
-            return self.response[3].split(" ")[1][1:-1]
+        def get_device_ssh(self):  # cmd has to be send as spot before
+            if self.is_send and self.command == "spot":
+                return self.response[3].split(" ")[1][1:-1]
+            return None
