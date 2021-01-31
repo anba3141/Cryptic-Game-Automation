@@ -57,7 +57,7 @@ class _Cryptic:
 
     class _OpenPc:
         def __init__(self, pc: int, driver):
-            self.pc = Pc(pc, driver)
+            self.pc = _Pc(pc, driver)
 
         def __enter__(self):
             return self.pc
@@ -69,7 +69,7 @@ class _Cryptic:
         self.driver.close()
 
 
-class Pc:
+class _Pc:
     def __init__(self, pc: int, driver):
         self.driver = driver
         self.driver.find_element_by_xpath('//*[@id="sidebar-container"]/app-control-center-sidebar-menu[1]').click()
@@ -90,7 +90,7 @@ class Pc:
 
     class _OpenTerminal:
         def __init__(self, driver):
-            self.terminal = Terminal(driver)
+            self.terminal = _Terminal(driver)
 
         def __enter__(self):
             return self.terminal
@@ -99,7 +99,7 @@ class Pc:
             self.terminal.close()
 
 
-class Terminal:
+class _Terminal:
     def __init__(self, driver):
         self.driver = driver
         timer(1, 2)
@@ -138,3 +138,9 @@ class Terminal:
             self.response = self.driver.find_element_by_xpath('//*[@id="terminal-history"]').text.split(
                 self.driver.find_elements_by_xpath('//*[@id="prompt"]')[-1].text)[-1].split("\n")
             self.sent = self.response.pop(0)
+
+        def get_uuid(self):  # cmd has to be send as spot before
+            return self.response[1].split(" ")[1]
+
+        def get_ssh(self):  # cmd has to be send as spot before
+            return self.response[3].split(" ")[1][1:-1]
