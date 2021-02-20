@@ -141,11 +141,11 @@ class _Terminal:
                 self.send()
 
         def send(self):
-            timer(4, 6)
+            timer(1.5, 2)
             command_line = self.driver.find_element_by_xpath('//*[@id="cmdline"]')
             command_line.send_keys(self.command + "\n")
             self.is_send = True
-            timer(2, 3)
+            timer(7, 8)
             self.response = self.driver.find_element_by_xpath('//*[@id="terminal-history"]').text.split(
                 self.driver.find_elements_by_xpath('//*[@id="prompt"]')[-1].text)[-1].split("\n")
             self.sent = self.response.pop(0)
