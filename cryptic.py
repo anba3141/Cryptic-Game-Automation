@@ -1,6 +1,9 @@
 from selenium import webdriver
 import time
 import random
+from typing import Callable, Optional
+
+close_functions = {"Terminal": False, "OpenCryptic": False, "OpenPc": False}
 
 
 def timer(a: float, b: float):
@@ -16,6 +19,8 @@ class OpenCryptic:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cryptic.close(exc_type, exc_val, exc_tb)
+        if close_functions["OpenCryptic"]:
+            close_functions["OpenCryptic"](exc_type, exc_val, exc_tb)
 
 
 class _Cryptic:
@@ -64,6 +69,8 @@ class _Cryptic:
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             self.pc.close()
+            if close_functions["OpenPc"]:
+                close_functions["OpenPc"](exc_type, exc_val, exc_tb)
 
     def exit(self):
         self.driver.close()
@@ -97,6 +104,8 @@ class _Pc:
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             self.terminal.close()
+            if close_functions["Terminal"]:
+                close_functions["Terminal"](exc_type, exc_val, exc_tb)
 
 
 class _Terminal:
@@ -159,3 +168,18 @@ class _Terminal:
             if self.is_send and self.command == "spot":
                 return self.response[3].split(" ")[1][1:-1]
             return None
+
+
+def terminal_close(f: Callable[[Optional, Optional, Optional], None]):
+    close_functions["Terminal"] = f
+    return f
+
+
+def open_cryptic_close(f: Callable[[Optional, Optional, Optional], None]):
+    close_functions["OpenCryptic"] = f
+    return f
+
+
+def open_pc_close(f: Callable[[Optional, Optional, Optional], None]):
+    close_functions["OpenPc"] = f
+    return f
