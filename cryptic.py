@@ -170,16 +170,16 @@ class _Terminal:
             return None
 
 
-def terminal_close(f: Callable[[Optional, Optional, Optional], None]):
+def terminal_close(f: Callable[..., None]):
     close_functions["Terminal"] = f
     return f
 
 
-def open_cryptic_close(f: Callable[[Optional, Optional, Optional], None]):
+def open_cryptic_close(f: Callable[..., None]):
     close_functions["OpenCryptic"] = f
     return f
 
 
-def open_pc_close(f: Callable[[Optional, Optional, Optional], None]):
+def open_pc_close(f: Callable[..., None]):
     close_functions["OpenPc"] = f
     return f
