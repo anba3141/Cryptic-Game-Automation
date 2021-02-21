@@ -1,7 +1,7 @@
 from selenium import webdriver
 import time
 import random
-from typing import Callable, Optional
+from typing import Callable
 
 close_functions = {"Terminal": False, "OpenCryptic": False, "OpenPc": False}
 
