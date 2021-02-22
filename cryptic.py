@@ -26,21 +26,8 @@ class OpenCryptic:
 class _Cryptic:
     def __init__(self, username, password, chromedriver_location):
         self.driver = webdriver.Chrome(chromedriver_location)
-        self.driver.get("https://cryptic-game.net")
-        time.sleep(random.randint(1, 3))
-        play_button = self.driver.find_element_by_xpath('//*[@id="__layout"]/div/main/div/nav/div[1]')
-        try:
-            play_button.click()
-        except:
-            pass
-
-        timer(1, 3)
-        self.driver.find_element_by_xpath('//*[@id="__layout"]/div/main/div/nav/div[2]/div/div/a[2]').click()
-
-        timer(1, 3)
-
-        self.driver.switch_to.window(self.driver.window_handles[-1])
-
+        self.driver.get("https://cryptic.defelo.ml/")
+        timer(2, 4)
         username_login = self.driver.find_element_by_xpath(
             '//*[@id="animation-container"]/app-login/app-account-page-base/div/div[1]/div/form/label[1]/input')
         passwort_login = self.driver.find_element_by_xpath(
